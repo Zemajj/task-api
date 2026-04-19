@@ -12,9 +12,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();                // Вызов модели
-                                            // Получение всех строк из таблицы tasks
-        return response()->json($tasks);     // Возвращаем результаты в виде json
+        // Получаем все задачи из базы данных.
+        $tasks = Task::all();
+
+        // Возвращаем список задач в формате JSON.
+        return response()->json($tasks);
     }
 
 
@@ -23,14 +25,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $valid = $request->validate([        // проверка входных данных
-            'title' => 'required|string',           // возвращение массива данных
+        // Валидируем входные данные запроса.
+        $valid = $request->validate([
+            'title' => 'required|string',
             'description' => 'nullable|string',
             'status' => 'required|string',
         ]);
-        $task = new Task($valid);               // создание объекта
-        $task->save();                          // сохранение объекта в БД
-        return response()->json($task, 201);      // возвращаем задачу и статус 201 (успех)
+
+        // Создаем новую задачу и сохраняем ее в базе данных.
+        $task = new Task($valid);
+        $task->save();
+
+        // Возвращаем созданную задачу и HTTP-статус 201 Created.
+        return response()->json($task, 201);
     }
 
     /**
@@ -38,7 +45,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return response()->json($task); // Возвращаем результат
+        // Возвращаем найденную задачу в формате JSON.
+        return response()->json($task);
     }
 
 
@@ -47,15 +55,17 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-
+        // Валидация новых данных для обновления задачи.
         $valid = $request->validate([
             'title' => 'required|string',
             'description' => 'nullable|string',
             'status' => 'required|string',
         ]);
 
+        // Обновляем существующую задачу в базе данных.
         $task->update($valid);
 
+        // Возвращаем обновленную задачу в формате JSON.
         return response()->json($task);
     }
 
@@ -64,7 +74,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        // Удаляем задачу из базы данных.
         $task->delete();
+
+        // Возвращаем пустой ответ со статусом 204.
         return response()->json(null, 204);
     }
 }
